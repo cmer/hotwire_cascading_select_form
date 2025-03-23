@@ -1,7 +1,7 @@
 class CitizensController < ApplicationController
   before_action :set_citizen
   before_action :load_countries_states_and_cities
-  before_action :handle_form_event
+  before_action :handle_form_event # this is defined in ApplicationController
 
   def new
   end
@@ -21,25 +21,11 @@ class CitizensController < ApplicationController
     @citizen.assign_attributes(citizen_params) if citizen_params.present?
   end
 
+  # Load the dropdown options countries, states and cities for @citizen.
   def load_countries_states_and_cities
     @countries = Country.order(:name)
     @states = State.where(country_id: @citizen.country_id).order(:name)
     @cities = City.where(state_id: @citizen.state_id).order(:name)
-  end
-
-  # Handle the form event parameter that is passed from the client.
-  # This method should likely be moved to ApplicationController since it can be reused by any controller.
-  def handle_form_event
-    return true unless request.post? || request.patch? || request.put?
-    return true unless params[:form_event].present?
-
-    method_name = "on_#{params[:form_event]}"
-    if respond_to?(method_name, true)
-      send(method_name)
-    else
-      raise(ActionController::RoutingError, "No method `#{method_name}` found")
-    end
-    false # Prevent the default form submission.
   end
 
   # Triggered by the `country_change` event.
