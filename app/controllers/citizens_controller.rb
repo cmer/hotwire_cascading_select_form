@@ -1,10 +1,11 @@
 class CitizensController < ApplicationController
   before_action :set_citizen
   before_action :load_countries_states_and_cities
-  before_action :handle_form_event, only: [ :create, :update ]
+  before_action :handle_form_event
 
   def new
   end
+
   def create
     if @citizen.save
       redirect_to new_citizen_path, notice: "Citizen created successfully"
@@ -27,8 +28,9 @@ class CitizensController < ApplicationController
   end
 
   # Handle the form event parameter that is passed from the client.
-  # This method could be moved to ApplicationController.
+  # This method should likely be moved to ApplicationController since it can be reused by any controller.
   def handle_form_event
+    return true unless request.post? || request.patch? || request.put?
     return true unless params[:form_event].present?
 
     method_name = "on_#{params[:form_event]}"
@@ -40,12 +42,14 @@ class CitizensController < ApplicationController
     false # Prevent the default form submission.
   end
 
+  # Triggered by the `country_change` event.
   def on_country_change
     @citizen.state = nil
     @citizen.city = nil
     stream_replace_form_with_partial
   end
 
+  # Triggered by the `state_change` event.
   def on_state_change
     @citizen.city = nil
     stream_replace_form_with_partial
