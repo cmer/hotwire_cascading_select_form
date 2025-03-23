@@ -1,5 +1,9 @@
 # Simple Hotwire cascading form example
 
+![Cascading Form Demo](app/assets/images/demo.gif)
+
+This demo shows how the cascading form works. When a country is selected, the states dropdown is updated with states from that country. When a state is selected, the cities dropdown is updated with cities from that state.
+
 ## Running Locally
 ```
 bin/rails db:setup
