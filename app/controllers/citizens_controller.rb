@@ -5,24 +5,11 @@ class CitizensController < ApplicationController
 
   def new
   end
-
-  def edit
-    @citizen = Citizen.first
-  end
-
   def create
     if @citizen.save
       redirect_to new_citizen_path, notice: "Citizen created successfully"
     else
       render :new, status: :unprocessable_entity, alert: "Citizen creation failed"
-    end
-  end
-
-  def update
-    if @citizen.save
-      redirect_to citizen_path(@citizen), notice: "Citizen updated successfully"
-    else
-      render :edit, status: :unprocessable_entity, alert: "Citizen update failed"
     end
   end
 
@@ -38,7 +25,6 @@ class CitizensController < ApplicationController
     @states = State.where(country_id: @citizen.country_id).order(:name)
     @cities = City.where(state_id: @citizen.state_id).order(:name)
   end
-
 
   # Handle the form event parameter that is passed from the client.
   # This method could be moved to ApplicationController.
