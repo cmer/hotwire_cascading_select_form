@@ -1,0 +1,10 @@
+<%= form.select :state_id,
+  options_from_collection_for_select(states, :id, :name, form.object.state_id),
+  { prompt: true },
+  {
+    data: {
+      action: "form#submitEvent",
+      form_event_param: "state_change"
+    }
+  }
+%>

@@ -1,0 +1,10 @@
+<%= form.select :country_id,
+  options_from_collection_for_select(countries, :id, :name, form.object.country_id),
+  { prompt: true },
+  {
+    data: {
+      action: "form#submitEvent",
+      form_event_param: "country_change"
+    }
+  }
+%>
